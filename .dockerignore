@@ -1,0 +1,9 @@
+/.git
+/.idea
+/hooks
+/.aliases
+/.dockerignore
+/.editorconfig
+/Dockerfile
+/LICENSE
+/README.md

@@ -3,6 +3,12 @@
   <component name="Go" enabled="true">
     <buildTags>
       <option name="goVersion" value="go1.16" />
+      <option name="customFlags">
+        <array>
+          <option value="epgstation" />
+          <option value="discord" />
+        </array>
+      </option>
     </buildTags>
   </component>
   <component name="NewModuleRootManager">
