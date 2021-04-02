@@ -59,7 +59,16 @@ func updateStatus(ctx context.Context, client *epgstation.Client) error {
 		} else if exists {
 			continue
 		}
-		r, err := epgstation.NewRecording(r)
+		c, err := client.GetChannel(ctx, r.ChannelID)
+		if err != nil {
+			return err
+		}
+		channel, err := epgstation.UpdateChannel(c)
+		if err != nil {
+			return err
+		}
+
+		r, err := epgstation.NewRecording(r, channel)
 		if err != nil {
 			return fmt.Errorf("error saving new record: %w\n", err)
 		}

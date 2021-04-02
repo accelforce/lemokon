@@ -31,27 +31,29 @@ func RecordingExists(epgstationRecordingID int) (bool, error) {
 	return true, nil
 }
 
-func NewRecording(record Record) (*db.Recording, error) {
-	recording := &db.Recording{
+func NewRecording(record Record, channel *db.Channel) (*db.Recording, error) {
+	recording := db.Recording{
 		ProgramName: record.Name,
 		StartedAt:   time.Time(record.StartedAt),
 		EndsAt:      time.Time(record.EndsAt),
+		ChannelID:   &channel.ID,
+		Channel:     *channel,
 	}
 	if err := db.DB.Transaction(func(tx *gorm.DB) error {
-		if err := tx.Create(recording).Error; err != nil {
+		if err := tx.Create(&recording).Error; err != nil {
 			return err
 		}
 
-		epgstationRecording := &EPGStationRecording{
+		epgstationRecording := EPGStationRecording{
 			EPGStationID: record.ID,
 			RecordingID:  recording.ID,
 		}
-		return tx.Create(epgstationRecording).Error
+		return tx.Create(&epgstationRecording).Error
 	}); err != nil {
 		return nil, err
 	}
 
-	return recording, nil
+	return &recording, nil
 }
 
 func FinishRunning(without []int) ([]db.Recording, error) {
@@ -60,6 +62,7 @@ func FinishRunning(without []int) ([]db.Recording, error) {
 		Joins("Recording").
 		Where("Recording.ended", false).
 		Not(without).
+		Preload("Recording.Channel").
 		Find(&epgstationRecordings).Error; err != nil {
 		return nil, err
 	}

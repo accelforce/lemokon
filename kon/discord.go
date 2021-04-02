@@ -78,6 +78,11 @@ func getRecordingEmbed(r *db.Recording) *discordgo.MessageEmbed {
 		Color:       colorOrange,
 		Fields: []*discordgo.MessageEmbedField{
 			{
+				Name:   "放送局",
+				Value:  r.Channel.Name,
+				Inline: false,
+			},
+			{
 				Name:   "放送日",
 				Value:  r.StartedAt.Format("2006/01/02"),
 				Inline: true,

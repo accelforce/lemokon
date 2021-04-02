@@ -11,5 +11,7 @@ type (
 		StartedAt   time.Time
 		EndsAt      time.Time
 		Ended       bool
+		ChannelID   *int
+		Channel     Channel
 	}
 )
